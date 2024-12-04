@@ -194,8 +194,8 @@ st.markdown("""
 <style>
     .block-container {
         max-width: 1200px;
-        padding-right: 1rem;
-        padding-left: 1rem;
+        padding-right: 2rem;
+        padding-left: 2rem;
     }
     [data-testid="stHorizontalBlock"] {
         align-items: center;
@@ -207,9 +207,11 @@ st.markdown("""
         padding: 20px;
         color: #FFFFFF;
         margin-bottom: 20px;
+        text-align: center;
     }
     .card h3 {
         color: #4CAF50;
+        margin-bottom: 10px;
     }
     /* Slider Styling */
     .custom-slider {
@@ -218,7 +220,21 @@ st.markdown("""
         align-items: center;
     }
     .custom-slider .stSlider > div {
-        width: 50%; /* Adjust the width as needed */
+        width: 50%;
+    }
+    /* Team Member Image Styling */
+    .team-member img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+    /* Footer Styling */
+    .footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #4CAF50;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -655,8 +671,7 @@ elif selected_menu == "Recommendations":
     # Footer
     st.markdown(
         """
-        ---
-        <div style="text-align: center;">
+        <div class="footer">
             <strong>Dataset:</strong> <a href="https://grouplens.org/datasets/movielens/20m/" style="color: #4CAF50;">MovieLens 20M</a> | 
             <strong>Project Report:</strong> Final Project Report by Group Nime | 
             <strong>Developed with:</strong> Streamlit, Python, Pandas, MLxtend, Plotly
