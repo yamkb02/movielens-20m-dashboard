@@ -150,38 +150,45 @@ def explain_association_table():
     )
     return explanation
 
-
-
 def explain_recommendations(selected_genre, top_associations, genre_colors):
     if not top_associations.empty:
-        # Collect associated genres and their lift values
-        associations = top_associations[['consequents_str', 'lift']].sort_values(by='lift', ascending=False)
-        associations_list = associations.apply(lambda row: f"<strong>{colorize_genre_string(row['consequents_str'], genre_colors)}</strong> (lift: {row['lift']:.2f})", axis=1).tolist()
+        # Get unique associations and their highest lift value for each genre
+        unique_associations = top_associations.groupby('consequents_str')['lift'].max().reset_index()
+        unique_associations = unique_associations.sort_values(by='lift', ascending=False)
         
-        if len(associations_list) > 1:
-            associations_paragraph = ', '.join(associations_list[:-1]) + f", and {associations_list[-1]}."
-        else:
-            associations_paragraph = associations_list[0]
+        # Format the unique associations and their lift values
+        associations_list = unique_associations.apply(
+            lambda row: f"<strong>{colorize_genre_string(row['consequents_str'], genre_colors)}</strong> (lift: {row['lift']:.2f})", axis=1
+        ).tolist()
         
-        explanation = "### In-Depth Look at Recommendations\n\n"
+        # Combine the associations into a single paragraph
+        associations_paragraph = ', '.join(associations_list[:-1]) + f", and {associations_list[-1]}." if len(associations_list) > 1 else associations_list[0]
+        
+        # Start the explanation text
+        explanation = f"### In-Depth Look at Recommendations for **{colorize_genre_string(selected_genre, genre_colors)}**\n\n"
         explanation += (
-            f"The bar chart above highlights the top genres associated with **{colorize_genre_string(selected_genre, genre_colors)}**. Each bar represents an associated genre and its **lift** value, which indicates the strength of the association. "
+            f"The bar chart above highlights the top genres associated with **{colorize_genre_string(selected_genre, genre_colors)}**. "
+            f"Each bar represents an associated genre and its **lift** value, which indicates the strength of the association. "
             f"These associations include {associations_paragraph} "
-            f"Users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}** movies often find these genres appealing, enhancing their viewing experience with complementary content."
+            f"Users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}** movies often find these genres appealing, "
+            f"enhancing their viewing experience with complementary content."
         )
         
         # Consolidate Practical Applications, Solving Challenges, and Empowering Decisions into one paragraph
         explanation += "\n\n"
         explanation += (
-            "Addressing the common challenge faced by movie streaming platforms and theaters in recommending content that truly resonates with users, leveraging **Association Rule Mining** can enhance recommendations by identifying genre associations. "
-            f"For instance, movie streaming services can refine their algorithms by suggesting complementary genres like {', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])} to users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}**, thereby boosting satisfaction and engagement. "
-            f"Similarly, movie theaters can curate diverse lineups by pairing genres such as **{colorize_genre_string(selected_genre, genre_colors)}** and {', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])}, attracting a wider audience. "
-            "Individual users also benefit by discovering new genres that align with their tastes, enriching their viewing experience. "
-            "These data-driven strategies not only personalize recommendations but also empower stakeholders to foster greater engagement, loyalty, and platform usage, ensuring that both businesses and users enjoy a more tailored and satisfying movie experience."
+            "Movie streaming platforms and theaters often struggle to recommend content that truly resonates with users. "
+            "By leveraging **Association Rule Mining**, genre associations can be identified to improve recommendations. "
+            f"For instance, streaming services can refine their algorithms by suggesting complementary genres like **{', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])}** to users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}**, increasing user satisfaction. "
+            f"Similarly, theaters can curate more appealing lineups by pairing genres such as **{colorize_genre_string(selected_genre, genre_colors)}** with **{', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])}**, attracting a wider audience. "
+            "These data-driven strategies personalize recommendations, foster greater engagement, and promote platform loyalty, ensuring that both businesses and users benefit from a more tailored movie experience."
         )
+        
         return explanation
     else:
         return "No strong associations found for the selected genre."
+
+
 
 
     
