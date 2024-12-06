@@ -242,8 +242,8 @@ st.markdown("""
 <style>
     .block-container {
         max-width: 1200px;
-        padding-right: 1rem;
-        padding-left: 1rem;
+        padding-right: 2rem;
+        padding-left: 2rem;
     }
     [data-testid="stHorizontalBlock"] {
         align-items: center;
@@ -255,9 +255,11 @@ st.markdown("""
         padding: 20px;
         color: #FFFFFF;
         margin-bottom: 20px;
+        text-align: center;
     }
     .card h3 {
         color: #4CAF50;
+        margin-bottom: 10px;
     }
     /* Slider Styling */
     .custom-slider {
@@ -266,7 +268,21 @@ st.markdown("""
         align-items: center;
     }
     .custom-slider .stSlider > div {
-        width: 50%; /* Adjust the width as needed */
+        width: 50%;
+    }
+    /* Team Member Image Styling */
+    .team-member img {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+    /* Footer Styling */
+    .footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #4CAF50;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -397,41 +413,34 @@ if selected_menu == "Welcome":
 
     # Team member cards
     team_members = [
-        {"name": "Mark Kenneth Badilla", "role": "Leader", "years": "2020-2023", "image": "https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462542089_1703313630429237_312007961235826364_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=9f807c&_nc_ohc=YvuwTONnT7UQ7kNvgGBd1ot&_nc_ht=scontent.fcgy2-4.fna&_nc_gid=A0U7n9W-S3xQkfl3ixwClkE&oh=03_Q7cD1QFJQ5lLLrjTeB7A1ud0M8ti1G7M24gd2naprhJ3nkEEOA&oe=672C9419"},
-        {"name": "Rob Borinaga", "role": "Member", "years": "2019-2023", "image": "https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/462538749_1568925197074088_6661845771934051377_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=9f807c&_nc_ohc=ko9bt5DaWJYQ7kNvgECZG65&_nc_ht=scontent.fcgy2-4.fna&_nc_gid=ALRWuxK2i2W7dGoyV-jDT5a&oh=03_Q7cD1QG4A-PBucleyNi3gEwlYY9hhFBJ5f7lYs0gGsd9CB-okg&oe=672C8FD6"},
-        {"name": "Alestair Cyril Coyoca", "role": "Member", "years": "2021-2024", "image": "https://scontent.fcgy2-4.fna.fbcdn.net/v/t1.15752-9/461838713_1963657944110054_1114849457222079080_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_ohc=5NNy68l_XLIQ7kNvgEZ0y_1&_nc_ht=scontent.fcgy2-4.fna&_nc_gid=AFsn_5qN-N7ZjDpF6m4zHPc&oh=03_Q7cD1QG80ZApSjUJuI6GEfzCxp49Ov0YiiknWzbaEVk482aHsw&oe=672C7B67"},
-        {"name": "Carmelyn Nime Gerali", "role": "Member", "years": "2018-2022", "image": "https://scontent.fcgy2-1.fna.fbcdn.net/v/t1.15752-9/462540186_1059839835604866_5455648228103355812_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_ohc=y68x6dbpveUQ7kNvgF8T9xO&_nc_ht=scontent.fcgy2-1.fna&_nc_gid=AWb_8iC_24b37jdIzK37WkR&oh=03_Q7cD1QFCVZgONdTrteILKRwmHIEGAdeMLrAoED1DbqULT3hjuA&oe=672C91F7"},
-        {"name": "James Alein Ocampo", "role": "Member", "years": "2020-2024", "image": "https://scontent.fcgy2-2.fna.fbcdn.net/v/t1.15752-9/462537913_496803843176373_4085186211692713416_n.jpg?stp=dst-jpg_s2048x2048&_nc_cat=103&ccb=1-7&_nc_sid=9f807c&_nc_ohc=zS9PnTmqTgEQ7kNvgG1qUkx&_nc_ht=scontent.fcgy2-2.fna&_nc_gid=AmKdAIaAY3rj1D14o7b2UlV&oh=03_Q7cD1QEeVHmMg-PPQ_Yky6laPnLO1GSrvxCerJ-jb0xWJyY5Ww&oe=672C82D0"}
+        {"name": "Mark Kenneth Badilla", "role": "Leader", "years": "SY 2020-2023", "image": "https://scontent-atl3-2.xx.fbcdn.net/v/t1.15752-9/462542089_1703313630429237_312007961235826364_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=0024fc&_nc_ohc=RQCRH3lRqdgQ7kNvgEHZ7T7&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&oh=03_Q7cD1QFZ0fMlDpCtEKrytphI7fJNjyDX9aG7ME-8vR4r334HkA&oe=6777B999"},
+        {"name": "Rob Borinaga", "role": "Member", "years": "SY 2019-2023", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462538749_1568925197074088_6661845771934051377_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=0024fc&_nc_ohc=gWKbZNogNk0Q7kNvgFIyFtT&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QGcBbJKO-TmOo31A7qEgbMpZ0WAUoiDj4PA8CRnpnLZCw&oe=6777B556"},
+        {"name": "Alestair Cyril Coyoca", "role": "Member", "years": "SY 2021-2024", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/461838713_1963657944110054_1114849457222079080_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=0024fc&_nc_ohc=KOG-jvTUdpYQ7kNvgGfluOF&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QFSmOY1sUra6iLPrnlFj7IotJCUnTYo_pfygcvvHu_mMg&oe=6777D927"},
+        {"name": "Carmelyn Nime Gerali", "role": "Member", "years": "SY 2018-2022", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462540186_1059839835604866_5455648228103355812_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=0024fc&_nc_ohc=vqtEpNM3KpMQ7kNvgHlqFTh&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QH8DcPo29M6b_chOIZwGbcYQ5HDJhYp4TmIxb-tcFcUoQ&oe=6777B777"},
+        {"name": "James Alein Ocampo", "role": "Member", "years": "SY 2020-2024", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462537913_496803843176373_4085186211692713416_n.jpg?stp=dst-jpg_s2048x2048&_nc_cat=103&ccb=1-7&_nc_sid=0024fc&_nc_ohc=q5cmf_W0WJsQ7kNvgFnffhl&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QFdbCijccs5-_V1kQd2cxvObbsPP30jYUcVp1t1MrXwUw&oe=6777A850"}
     ]
 
-    # Create two columns: one for the top 3 cards, another for the bottom 2 cards
-    top_row, bottom_row = st.columns(2)
+    # Create two rows: one for the top 3 cards, another for the bottom 2 cards
+    top_row = st.columns(3)
+    bottom_row = st.columns([1, 1, 1])  # Change this line
 
-    with top_row:
-        for member in team_members[:3]:
+    for i, member in enumerate(team_members):
+        if i < 3:
+            column = top_row[i]
+        else:
+            column = bottom_row[i - 3]
+        
+        with column:
             st.markdown(
-                f"""
-                <div class="card" style="margin-bottom: 20px; text-align: center;">
-                    <img src="{member['image']}" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 10px;">
-                    <h3>{member['name']}</h3>
-                    <p>{member['role']} ({member['years']})</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    with bottom_row:
-        for member in team_members[3:]:
-            st.markdown(
-                f"""
-                <div class="card" style="margin-bottom: 20px; text-align: center;">
-                    <img src="{member['image']}" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 10px;">
-                    <h3>{member['name']}</h3>
-                    <p>{member['role']} ({member['years']})</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            f"""
+            <div style="background-color: #1c1d24; border-radius: 10px; padding: 15px; margin-bottom: 10px; text-align: center; max-width: 380px;">
+                <img src="{member['image']}" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 10px;">
+                <h3 style="margin: 0; color: #FFFFFF; padding: 0;">{member['name']}</h3>
+                <p style="margin: 5px 0; color: #4CAF50;">{member['role']}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 elif selected_menu == "Data Overview":
@@ -726,8 +735,7 @@ elif selected_menu == "Recommendations":
     # Footer
     st.markdown(
         """
-        ---
-        <div style="text-align: center;">
+        <div class="footer">
             <strong>Dataset:</strong> <a href="https://grouplens.org/datasets/movielens/20m/" style="color: #4CAF50;">MovieLens 20M</a> | 
             <strong>Project Report:</strong> Final Project Report by Group Nime | 
             <strong>Developed with:</strong> Streamlit, Python, Pandas, MLxtend, Plotly
