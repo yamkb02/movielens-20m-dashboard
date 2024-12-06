@@ -7,6 +7,7 @@ from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
 import requests
 from scipy.stats import skew
+import seaborn as sns
 
 # --------------------------
 # Helper Functions
@@ -121,6 +122,7 @@ def explain_top_rule(rule):
         )
     return explanation
 
+
 def explain_scatter_plot(rules):
     average_support = rules['support'].mean()
     average_confidence = rules['confidence'].mean()
@@ -177,6 +179,52 @@ def explain_recommendations(selected_genre, top_associations):
         return explanation
     else:
         return "No strong associations found for the selected genre."
+    
+
+# Color genres
+# Load movies.csv file
+movies_df = pd.read_csv("ml-20m/movies.csv")
+
+# Step 1: Extract the genres and split them into individual genres
+genres_series = movies_df['genres'].str.split('|').explode().unique()
+
+# Step 2: Generate a color mapping for each genre
+def generate_genre_colors(genres):
+    genre_colors = {}
+    # Use seaborn's color palette to generate distinct colors
+    color_palette = sns.color_palette("Set3", len(genres))
+    
+    # Map each genre to a unique color from the palette
+    for i, genre in enumerate(genres):
+        genre_colors[genre] = f'#{int(color_palette[i][0] * 255):02x}{int(color_palette[i][1] * 255):02x}{int(color_palette[i][2] * 255):02x}'  # RGB to Hex
+    
+    return genre_colors
+
+# Get the unique genres from the dataset
+unique_genres = genres_series.tolist()
+
+# Generate the color mapping for genres
+genre_colors = generate_genre_colors(unique_genres)
+
+# Function to colorize genre strings dynamically
+def colorize_genre_string(genre_string, genre_colors):
+    genres = genre_string.split(', ')
+    colored_genres = []
+    for genre in genres:
+        genre_color = genre_colors.get(genre, "#000000")  # Default to black if no color is found
+        colored_genres.append(f'<span style="color:{genre_color};">{genre}</span>')
+    return ', '.join(colored_genres)
+
+# Function to render the HTML table with genre colors
+def render_html_table(df):
+    html = df.to_html(escape=False)  # Escape=False allows raw HTML in the table
+    st.markdown(html, unsafe_allow_html=True)
+
+# Now when applying this colorization logic, it will give you distinct colors
+
+
+
+
 
 # --------------------------
 # Streamlit App Layout
@@ -538,37 +586,53 @@ elif selected_menu == "Association Rule Mining":
     if "rules" in st.session_state and not st.session_state["rules"].empty:
         rules = st.session_state["rules"]
         
-        # Convert frozenset to string for Plotly visualization
+        # Convert frozenset to string for easier visualization
         rules['antecedents_str'] = rules['antecedents'].apply(lambda x: ', '.join(sorted(list(x))) if isinstance(x, frozenset) else x)
         rules['consequents_str'] = rules['consequents'].apply(lambda x: ', '.join(sorted(list(x))) if isinstance(x, frozenset) else x)
 
+        # Apply colorization to antecedents and consequents
+        rules['antecedents_colored'] = rules['antecedents_str'].apply(lambda x: colorize_genre_string(x, genre_colors))
+        rules['consequents_colored'] = rules['consequents_str'].apply(lambda x: colorize_genre_string(x, genre_colors))
+
+        # Ensure antecedents_str and consequents_str are included in the selected columns
+        selected_columns = ['antecedents_str', 'consequents_str', 'antecedents_colored', 'consequents_colored', 'support', 'confidence', 'lift']
+        
         st.markdown("### Top 10 Association Rules")
-        top_10_rules = rules.sort_values(by='lift', ascending=False).head(10)
-        st.write(top_10_rules)
+        top_10_rules = rules[selected_columns].sort_values(by='lift', ascending=False).head(10)
+
+        # Render the top 10 rules as an HTML table with colored genres
+        render_html_table(top_10_rules[['antecedents_colored', 'consequents_colored', 'support', 'confidence', 'lift']])
         
         # Dynamic Explanation for Top 10 Rules
         if not top_10_rules.empty:
+            # Pass the first rule row as a series
             first_rule = top_10_rules.iloc[0]
             st.markdown(explain_top_rule(first_rule))
+
         
+        # Scatter plot of Support vs Confidence
         st.markdown("### Support vs Confidence of Association Rules")
         fig5 = px.scatter(rules, x='support', y='confidence', size='lift',
-                          color='lift', hover_data=['antecedents_str', 'consequents_str'],
-                          title='Support vs Confidence of Association Rules',
-                          labels={'support':'Support', 'confidence':'Confidence', 'lift':'Lift'},
-                          size_max=15)
+                        color='lift', hover_data=['antecedents_colored', 'consequents_colored'],
+                        title='Support vs Confidence of Association Rules',
+                        labels={'support':'Support', 'confidence':'Confidence', 'lift':'Lift'},
+                        size_max=15)
         st.plotly_chart(fig5, use_container_width=True)
         
         # Dynamic Explanation for Scatter Plot
         st.markdown(explain_scatter_plot(rules))
         
+        # Interactive Rules Table (HTML)
         st.markdown("### Interactive Rules Table")
-        st.dataframe(rules.sort_values(by='lift', ascending=False).head(50))
+        # Render the entire table as HTML
+        render_html_table(rules[['antecedents_colored', 'consequents_colored', 'support', 'confidence', 'lift']].sort_values(by='lift', ascending=False).head(50))
         
         # Dynamic Explanation for Interactive Table
         st.markdown(explain_association_table())
     else:
         st.warning("No association rules to display.")
+
+
 
 
 elif selected_menu == "Recommendations":
