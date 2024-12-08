@@ -150,21 +150,59 @@ def explain_association_table():
     )
     return explanation
 
+
+
+
+def extract_unique_genres(top_associations):
+    """
+    Extracts unique genres from the top_associations DataFrame,
+    ensuring each genre appears only once with its highest lift value.
+    """
+    print("Extracting unique genres with highest lift values.")
+    
+    # Initialize a dictionary to hold the highest lift per genre
+    genre_lift_dict = {}
+    
+    for _, row in top_associations.iterrows():
+        # Split the consequents_str into individual genres
+        genres = [genre.strip() for genre in row['consequents_str'].split(',')]
+        for genre in genres:
+            # Update the lift value if it's higher than the existing one
+            if genre not in genre_lift_dict or row['lift'] > genre_lift_dict[genre]:
+                genre_lift_dict[genre] = row['lift']
+                print(f"Updated lift for genre '{genre}': {row['lift']:.2f}")
+    
+    # Convert the dictionary to a sorted list of tuples (genre, lift)
+    sorted_genres = sorted(genre_lift_dict.items(), key=lambda x: x[1], reverse=True)
+    print(f"Unique genres sorted by lift: {sorted_genres}")
+    
+    return sorted_genres
+
 def explain_recommendations(selected_genre, top_associations, genre_colors):
     if not top_associations.empty:
-        # Get unique associations and their highest lift value for each genre
-        unique_associations = top_associations.groupby('consequents_str')['lift'].max().reset_index()
-        unique_associations = unique_associations.sort_values(by='lift', ascending=False)
+        print("Step 2: Getting unique associations and their highest lift values.")
         
-        # Format the unique associations and their lift values
-        associations_list = unique_associations.apply(
-            lambda row: f"<strong>{colorize_genre_string(row['consequents_str'], genre_colors)}</strong> (lift: {row['lift']:.2f})", axis=1
-        ).tolist()
+        # Step 2: Extract unique genres with highest lift values
+        unique_genres = extract_unique_genres(top_associations)
+        
+        # Step 3: Format the unique genres with lift values and HTML colors
+        print("Step 3: Formatting the unique genres with lift values.")
+        associations_list = [
+            f"<strong><span style=\"color:{genre_colors.get(genre, '#000000')};\">{genre}</span></strong> (lift: {lift:.2f})"
+            for genre, lift in unique_genres
+        ]
+        print(f"Formatted associations list with lift values: {associations_list}")
         
         # Combine the associations into a single paragraph
-        associations_paragraph = ', '.join(associations_list[:-1]) + f", and {associations_list[-1]}." if len(associations_list) > 1 else associations_list[0]
+        print("Step 4: Combining the associations into a single paragraph.")
+        if len(associations_list) > 1:
+            associations_paragraph = ', '.join(associations_list[:-1]) + f", and {associations_list[-1]}."
+        else:
+            associations_paragraph = associations_list[0]
+        print(f"Final associations paragraph: {associations_paragraph}")
         
         # Start the explanation text
+        print("Step 5: Creating the explanation text.")
         explanation = f"### In-Depth Look at Recommendations for **{colorize_genre_string(selected_genre, genre_colors)}**\n\n"
         explanation += (
             f"The bar chart above highlights the top genres associated with **{colorize_genre_string(selected_genre, genre_colors)}**. "
@@ -175,21 +213,25 @@ def explain_recommendations(selected_genre, top_associations, genre_colors):
         )
         
         # Consolidate Practical Applications, Solving Challenges, and Empowering Decisions into one paragraph
+        print("Step 6: Adding practical applications to the explanation text.")
+        recommendation_genres = [genre for genre, _ in unique_genres]
+        recommendation_genres_colored = [colorize_genre_string(genre, genre_colors) for genre in recommendation_genres]
+        recommendation_genres_str = ', '.join(recommendation_genres_colored)
+        
         explanation += "\n\n"
         explanation += (
             "Movie streaming platforms and theaters often struggle to recommend content that truly resonates with users. "
             "By leveraging **Association Rule Mining**, genre associations can be identified to improve recommendations. "
-            f"For instance, streaming services can refine their algorithms by suggesting complementary genres like **{', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])}** to users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}**, increasing user satisfaction. "
-            f"Similarly, theaters can curate more appealing lineups by pairing genres such as **{colorize_genre_string(selected_genre, genre_colors)}** with **{', '.join([colorize_genre_string(assoc.split(' (')[0], genre_colors) for assoc in associations_list])}**, attracting a wider audience. "
+            f"For instance, streaming services can refine their algorithms by suggesting complementary genres like **{recommendation_genres_str}** to users who enjoy **{colorize_genre_string(selected_genre, genre_colors)}**, increasing user satisfaction. "
+            f"Similarly, theaters can curate more appealing lineups by pairing genres such as **{colorize_genre_string(selected_genre, genre_colors)}** with **{recommendation_genres_str}**, attracting a wider audience. "
             "These data-driven strategies personalize recommendations, foster greater engagement, and promote platform loyalty, ensuring that both businesses and users benefit from a more tailored movie experience."
         )
         
+        print("Step 7: Final explanation generated.")
         return explanation
     else:
+        print("No strong associations found for the selected genre.")
         return "No strong associations found for the selected genre."
-
-
-
 
     
 
