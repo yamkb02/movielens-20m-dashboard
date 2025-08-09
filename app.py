@@ -771,4 +771,4 @@ elif selected_menu == "Recommendations":
         Through meticulous analysis and data-driven methodologies, we've uncovered meaningful associations within the MovieLens 20M dataset. These insights not only enhance movie recommendation systems but also provide strategic guidance for stakeholders aiming to elevate user satisfaction and engagement.
         """, unsafe_allow_html=True
     )
-    )
+    
