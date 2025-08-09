@@ -465,18 +465,18 @@ if selected_menu == "Welcome":
         """
     )
 
-    # Team member cards
+    # Team member cards (without images)
     team_members = [
-        {"name": "Mark Kenneth Badilla", "role": "Leader", "years": "SY 2020-2023", "image": "https://scontent-atl3-2.xx.fbcdn.net/v/t1.15752-9/462542089_1703313630429237_312007961235826364_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=0024fc&_nc_ohc=RQCRH3lRqdgQ7kNvgEHZ7T7&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&oh=03_Q7cD1QFZ0fMlDpCtEKrytphI7fJNjyDX9aG7ME-8vR4r334HkA&oe=6777B999"},
-        {"name": "Rob Borinaga", "role": "Member", "years": "SY 2019-2023", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462538749_1568925197074088_6661845771934051377_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=0024fc&_nc_ohc=gWKbZNogNk0Q7kNvgFIyFtT&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QGcBbJKO-TmOo31A7qEgbMpZ0WAUoiDj4PA8CRnpnLZCw&oe=6777B556"},
-        {"name": "Alestair Cyril Coyoca", "role": "Member", "years": "SY 2021-2024", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/461838713_1963657944110054_1114849457222079080_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=0024fc&_nc_ohc=KOG-jvTUdpYQ7kNvgGfluOF&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QFSmOY1sUra6iLPrnlFj7IotJCUnTYo_pfygcvvHu_mMg&oe=6777D927"},
-        {"name": "Carmelyn Nime Gerali", "role": "Member", "years": "SY 2018-2022", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462540186_1059839835604866_5455648228103355812_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=0024fc&_nc_ohc=vqtEpNM3KpMQ7kNvgHlqFTh&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QH8DcPo29M6b_chOIZwGbcYQ5HDJhYp4TmIxb-tcFcUoQ&oe=6777B777"},
-        {"name": "James Alein Ocampo", "role": "Member", "years": "SY 2020-2024", "image": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.15752-9/462537913_496803843176373_4085186211692713416_n.jpg?stp=dst-jpg_s2048x2048&_nc_cat=103&ccb=1-7&_nc_sid=0024fc&_nc_ohc=q5cmf_W0WJsQ7kNvgFnffhl&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&oh=03_Q7cD1QFdbCijccs5-_V1kQd2cxvObbsPP30jYUcVp1t1MrXwUw&oe=6777A850"}
+        {"name": "Mark Kenneth Badilla", "role": "Leader", "years": "SY 2020-2023"},
+        {"name": "Rob Borinaga", "role": "Member", "years": "SY 2019-2023"},
+        {"name": "Alestair Cyril Coyoca", "role": "Member", "years": "SY 2021-2024"},
+        {"name": "Carmelyn Nime Gerali", "role": "Member", "years": "SY 2018-2022"},
+        {"name": "James Alein Ocampo", "role": "Member", "years": "SY 2020-2024"}
     ]
 
     # Create two rows: one for the top 3 cards, another for the bottom 2 cards
     top_row = st.columns(3)
-    bottom_row = st.columns([1, 1, 1])  # Change this line
+    bottom_row = st.columns([1, 1, 1])
 
     for i, member in enumerate(team_members):
         if i < 3:
@@ -488,7 +488,6 @@ if selected_menu == "Welcome":
             st.markdown(
             f"""
             <div style="background-color: #1c1d24; border-radius: 10px; padding: 15px; margin-bottom: 10px; text-align: center; max-width: 380px;">
-                <img src="{member['image']}" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover; margin-bottom: 10px;">
                 <h3 style="margin: 0; color: #FFFFFF; padding: 0;">{member['name']}</h3>
                 <p style="margin: 5px 0; color: #4CAF50;">{member['role']}</p>
             </div>
@@ -771,4 +770,5 @@ elif selected_menu == "Recommendations":
         """
         Through meticulous analysis and data-driven methodologies, we've uncovered meaningful associations within the MovieLens 20M dataset. These insights not only enhance movie recommendation systems but also provide strategic guidance for stakeholders aiming to elevate user satisfaction and engagement.
         """, unsafe_allow_html=True
+    )
     )
